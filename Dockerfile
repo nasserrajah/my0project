@@ -1,10 +1,8 @@
-# Use PHP 8.2 image
-FROM render/php:8.2-fpm
-
+# Use a public PHP image that doesn't require login
+FROM bitnami/php-fpm:8.2
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git unzip libonig-dev libzip-dev curl npm
+RUN install_packages git unzip libzip-dev npm
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip
@@ -13,7 +11,7 @@ RUN docker-php-ext-install pdo_mysql mbstring zip
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /app
 
 # Copy project files
 COPY . .

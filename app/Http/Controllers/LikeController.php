@@ -7,34 +7,16 @@ use Illuminate\Support\Facades\DB;
 
 class LikeController extends Controller
 {
-    public function getLikes(Request $request)
+    public function index()
     {
-        $userIdentifier = $request->ip(); // مؤقتًا، لاحقًا auth()->id() أفضل
-        $liked = DB::table('likes')->where('user_identifier', $userIdentifier)->exists();
         $count = DB::table('likes')->count();
-
-        return response()->json([
-            'count' => $count,
-            'liked' => $liked
-        ]);
+        return response()->json(['likes' => $count]);
     }
 
-    public function addLike(Request $request)
+    public function store()
     {
-        $userIdentifier = $request->ip();
-
-        $exists = DB::table('likes')->where('user_identifier', $userIdentifier)->exists();
-
-        if (!$exists) {
-            DB::table('likes')->insert([
-                'user_identifier' => $userIdentifier,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        }
-
+        DB::table('likes')->insert(['created_at' => now(), 'updated_at' => now()]);
         $count = DB::table('likes')->count();
-        return response()->json(['count' => $count]);
+        return response()->json(['likes' => $count]);
     }
 }
-
